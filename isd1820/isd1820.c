@@ -58,6 +58,22 @@ https://wiki.keyestudio.com/KS0463_keyestudio_ISD1820_Voice_Recording_and_Playba
 #include "isd1820.h"
 #include "main.h"
 
+void ISD1820_StartRecording(void){
+	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 1);
+}
+
+void ISD1820_StopRecording(void){
+	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 0);
+}
+
+void ISD1820_StartPlaying(void){
+	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 1);
+}
+
+void ISD1820_StopPlaying(void){
+	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 0);
+}
+
 void ISD1820_Record(uint16_t rec_time){
 	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 1);
 	HAL_Delay(rec_time);
@@ -89,4 +105,10 @@ void ISD1820_RecordAndPlay(uint16_t rec_time, uint16_t play_time){
 	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 0);
 	//---
 }
+void ISD1820_EnableFeedThrough(void){
+	HAL_GPIO_WritePin(FT_GPIO_Port, FT_Pin, 1);
+}
 
+void ISD1820_DisableFeedThrough(void){
+	HAL_GPIO_WritePin(FT_GPIO_Port, FT_Pin, 0);
+}

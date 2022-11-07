@@ -65,6 +65,33 @@ extern C {
 
 #include "stm32f4xx_hal.h"
 
+void ISD1820_StartRecording(void);
+/**
+ * @brief  Starts recording audio using ISD1820 chip by setting REC_Pin to high until Pin is set to low or ISD1820_StopRecording is called or time limit is reached.
+ * @note   Recording takes precedence over Playing. The recording time limit depends on the resistance of resistor R4. For R4=100k, the limit is 10 seconds.
+ * @retval None
+ */
+
+void ISD1820_StopRecording(void);
+/**
+ * @brief  Stops recording audio using ISD1820 chip by setting REC_Pin to low.
+ * @note   Recording takes precedence over Playing. The recording time limit depends on the resistance of resistor R4. For R4=100k, the limit is 10 seconds.
+ * @retval None
+ */
+
+void ISD1820_StartPlaying(void);
+/**
+ * @brief  Starts playing audio using ISD1820 chip by setting PL_Pin to high.
+ * @note   If not stopped by other means (ie. ISD1820_StopPlaying()), plays until the end of the record.
+ * @retval None
+ */
+
+void ISD1820_StopPlaying(void);
+/**
+ * @brief  Stops playing audio using ISD1820 chip by setting PL_Pin to low.
+ * @retval None
+ */
+
 void ISD1820_Record(uint16_t rec_time);
 /**
  * @brief  Records audio using ISD1820 chip. It records a total of {rec_time} milliseconds.
@@ -94,6 +121,18 @@ void ISD1820_RecordAndPlay(uint16_t rec_time, uint16_t play_time);
  * @note   The recording time limit depends on the resistance of resistor R4. For R4=100k, the limit is 10 seconds.
  * @param  rec_time: Recording time required [milliseconds].
  * @param  play_time: Play time [milliseconds].
+ * @retval None
+ */
+
+void ISD1820_EnableFeedThrough(void);
+/**
+ * @brief  Enable feed through.
+ * @retval None
+ */
+
+void ISD1820_DisableFeedThrough(void);
+/**
+ * @brief  Disable feed through.
  * @retval None
  */
 
