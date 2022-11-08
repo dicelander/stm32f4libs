@@ -65,6 +65,18 @@ extern C {
 
 #include "stm32f4xx_hal.h"
 
+void ISD1820_AsyncTimerSet(TIM_HandleTypeDef* tim);
+
+void ISD1820_ResetPins(void);
+
+void ISD1820_AsyncInit(TIM_HandleTypeDef* tim);
+
+void ISD1820_RecordAsync(uint32_t counter);
+
+void ISD1820_PlayAsync(uint32_t counter);
+
+void ISD1820_AsyncTimHandler(void);
+
 void ISD1820_StartRecording(void);
 /**
  * @brief  Starts recording audio using ISD1820 chip by setting REC_Pin to high until Pin is set to low or ISD1820_StopRecording is called or time limit is reached.

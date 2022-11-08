@@ -58,6 +58,74 @@ https://wiki.keyestudio.com/KS0463_keyestudio_ISD1820_Voice_Recording_and_Playba
 #include "isd1820.h"
 #include "main.h"
 
+#define FIX_TIMER_TRIGGER(handle_ptr) (__HAL_TIM_CLEAR_FLAG(handle_ptr, TIM_SR_UIF))
+
+TIM_HandleTypeDef* _ISD1280_asyncTimer;
+
+struct {
+	uint8_t FT;
+	uint8_t PL;
+	uint8_t PE;
+	uint8_t REC;
+	uint32_t Counter;
+} _ISD1280_Status;
+
+//HAL_TIM_Base_Start_IT(_ISD1280_asyncTimer);
+//__HAL_TIM_SET_AUTORELOAD(_ISD1280_asyncTimer, counter)
+
+//Counter = Periodo*(clk + 1)/(psc + 1);
+
+void ISD1820_AsyncTimerSet(TIM_HandleTypeDef* tim){
+	_ISD1280_asyncTimer = tim;
+}
+
+void ISD1820_ResetPins(void) {
+	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 0);
+	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 0);
+	HAL_GPIO_WritePin(PE_GPIO_Port, PE_Pin, 0);
+	HAL_GPIO_WritePin(FT_GPIO_Port, FT_Pin, 0);
+	_ISD1280_Status.FT = 0;
+	_ISD1280_Status.PL = 0;
+	_ISD1280_Status.PE = 0;
+	_ISD1280_Status.REC = 0;
+}
+
+void ISD1820_AsyncInit(TIM_HandleTypeDef* tim) {
+	ISD1820_AsyncTimerSet(_ISD1280_asyncTimer);
+	ISD1820_ResetPins();
+}
+
+void ISD1820_RecordAsync(uint32_t counter){
+	FIX_TIMER_TRIGGER(_ISD1280_asyncTimer);
+	__HAL_TIM_SET_AUTORELOAD(_ISD1280_asyncTimer, counter);
+	_ISD1280_Status.REC = 1;
+	__HAL_TIM_SET_COUNTER(_ISD1280_asyncTimer, 0);
+	HAL_TIM_Base_Start_IT(_ISD1280_asyncTimer);
+	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 1);
+}
+
+void ISD1820_PlayAsync(uint32_t counter){
+	FIX_TIMER_TRIGGER(_ISD1280_asyncTimer);
+	__HAL_TIM_SET_AUTORELOAD(_ISD1280_asyncTimer, counter);
+	_ISD1280_Status.PL = 1;
+	__HAL_TIM_SET_COUNTER(_ISD1280_asyncTimer, 0);
+	HAL_TIM_Base_Start_IT(_ISD1280_asyncTimer);
+	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 1);
+}
+
+void ISD1820_AsyncTimHandler(void){
+	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 0);
+	HAL_GPIO_WritePin(PL_GPIO_Port, PL_Pin, 0);
+//	HAL_GPIO_WritePin(PE_GPIO_Port, PE_Pin, 0);
+//	HAL_GPIO_WritePin(FT_GPIO_Port, FT_Pin, 0);
+	_ISD1280_Status.PL = 0;
+	_ISD1280_Status.REC = 0;
+//	_ISD1280_Status.PE = 0;
+//	_ISD1280_Status.FT = 0;
+	HAL_TIM_Base_Stop_IT(_ISD1280_asyncTimer);
+	__HAL_TIM_SET_COUNTER(_ISD1280_asyncTimer, 0);
+}
+
 void ISD1820_StartRecording(void){
 	HAL_GPIO_WritePin(REC_GPIO_Port, REC_Pin, 1);
 }
