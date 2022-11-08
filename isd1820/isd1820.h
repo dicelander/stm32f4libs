@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ----------------------------------------------------------------------
  * Created on: November 4, 2022.
  * Last update: November 6, 2022.
- * Authors:  David Simon Marques <davidsimon@ufmg.br> and Victor Araujo Sander Silva <victorsander@gmail.com>
+ * Authors:  David Simon Marques <davidsimon@ufmg.br> and Victor Araujo Sander Silva <victorsander@ufmg.br>
  * Institution: Universidade Federal de Minas Gerais (UFMG)
  * Version: 1.0.0
 ----------------------------------------------------------------------
